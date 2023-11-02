@@ -39,11 +39,13 @@ public class HouseServlet extends HttpServlet {
         }
     }
 
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
 
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
@@ -57,43 +59,35 @@ public class HouseServlet extends HttpServlet {
         int tamaño  = Integer.parseInt(request.getParameter("size"));
         int numeroPaneles = Integer.parseInt(request.getParameter("panels"));
         int id_user = user.getId();
-        Double ahorro = 0.0 ;
         Double consumo = Double.valueOf(request.getParameter("cost"));
         Double precioPanel = Double.valueOf(request.getParameter("pricepanel"));
         int numeroCasas=0;
-        Double mediaConsumoT = 0.0;
-        Double mediaConsumoH = 0.0;
         Double mediaAhorroPaneles = 0.0;
         
         for(House hou : lista){
-            numeroCasas++;
-            if(hou.getTamaño()>0)
-                mediaConsumoT = mediaConsumoT + (hou.getConsumo()/hou.getTamaño());
-            if(hou.getHabitantes()>0)
-                mediaConsumoH = mediaConsumoH + (hou.getConsumo()/hou.getHabitantes());
-            if(hou.getNumeroPaneles()>0)
-                mediaAhorroPaneles = mediaAhorroPaneles + (hou.getAhorro()/hou.getNumeroPaneles());
-        }
-        numeroCasas++;
-        mediaConsumoT = mediaConsumoT + (consumo/tamaño);
-        mediaConsumoH = mediaConsumoH + (consumo/habitantes);
-        
-        ahorro= (((mediaConsumoT/numeroCasas)*tamaño) + ((mediaConsumoH/numeroCasas)*habitantes) - (mediaAhorroPaneles*numeroPaneles));
+            if(hou.getId_user()!=id_user){
+                numeroCasas++;
+                if(hou.getAhorro()>0 && hou.getNumeroPaneles()>0)
+                    mediaAhorroPaneles = mediaAhorroPaneles + (hou.getAhorro()/hou.getNumeroPaneles());
+            }
+        }        
+        Double ahorro=(mediaAhorroPaneles/numeroCasas)*numeroPaneles;
 
         House house = new House(habitantes,nombre,consumo,ahorro,tamaño,numeroPaneles,precioPanel,id_user);
     
         try {
             controller.updateHouse(house);
         } catch (Exception ex) {
-           ex.printStackTrace();
+            Logger.getLogger(HouseServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
         session.setAttribute("listaUsers", lista);
         response.sendRedirect("calculadoraAhorro.jsp");
 
     }
     
+    @Override
     public String getServletInfo() {
         return "Short description";
-    }// </editor-fold>
+    }
 
 }

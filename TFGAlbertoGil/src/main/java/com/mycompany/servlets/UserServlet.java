@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
+
 package com.mycompany.servlets;
 
 import java.io.IOException;
@@ -40,6 +37,7 @@ Controller controller = new Controller();
         }
     }
 
+@Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
@@ -51,6 +49,7 @@ Controller controller = new Controller();
     }
 
 
+@Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
@@ -86,7 +85,7 @@ Controller controller = new Controller();
             controller.createHouse(new House(us.getId()));
             lista.add(new User(name,surname,telf,mail,pwd));
             session.setAttribute("listaUsers", lista);
-            response.sendRedirect("mostrarUsuarios.jsp");
+            response.sendRedirect("login.jsp");
         }if(insertar==false){
             response.setContentType("text/plain");
             response.getWriter().write(respuesta);
@@ -94,8 +93,9 @@ Controller controller = new Controller();
     }
 
 
+@Override
     public String getServletInfo() {
         return "Short description";
-    }// </editor-fold>
+    }
 
 }
