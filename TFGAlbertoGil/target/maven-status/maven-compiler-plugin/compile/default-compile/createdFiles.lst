@@ -1,0 +1,14 @@
+modelo\House_.class
+com\mycompany\servlets\UserServlet.class
+modelo\Controller.class
+modelo\User.class
+modelo\User_.class
+controllers\exceptions\IllegalOrphanException.class
+com\mycompany\servlets\LoginServlet.class
+com\mycompany\servlets\HouseServlet.class
+controllers\UserJpaController.class
+controllers\HouseJpaController.class
+modelo\House.class
+controllers\exceptions\NonexistentEntityException.class
+controllers\exceptions\PreexistingEntityException.class
+controllers\ControllerPersistencia.class
