@@ -1,24 +1,115 @@
 
+<%@page import="java.util.Enumeration"%>
+<%@page import="java.util.List"%>
+<%@page import="modelo.User"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
     <head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<link rel="stylesheet" href="assets/css/main.css" />
+	<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>MyEnergyHub</title>
+        <script language="JavaScript">
+            window.onload = function () {
+                document.addEventListener("contextmenu", function (e) {
+                    e.preventDefault();
+                }, false);
+                document.addEventListener("keydown", function (e) {
+                    //document.onkeydown = function(e) {
+                    // "I" key
+                    if (e.ctrlKey && e.shiftKey && e.keyCode == 73) {
+                        disabledEvent(e);
+                    }
+                    // "J" key
+                    if (e.ctrlKey && e.shiftKey && e.keyCode == 74) {
+                        disabledEvent(e);
+                    }
+                    // "S" key + macOS
+                    if (e.keyCode == 83 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
+                        disabledEvent(e);
+                    }
+                    // "U" key
+                    if (e.ctrlKey && e.keyCode == 85) {
+                        disabledEvent(e);
+                    }
+                    // "F12" key
+                    if (event.keyCode == 123) {
+                        disabledEvent(e);
+                    }
+                }, false);
+                function disabledEvent(e) {
+                    if (e.stopPropagation) {
+                        e.stopPropagation();
+                    } else if (window.event) {
+                        window.event.cancelBubble = true;
+                    }
+                    e.preventDefault();
+                    return false;
+                }
+            }
+    </script>
     </head>
-    <body>
-        <header>
-            <nav>
-                <ul>
-                    <li><a href="index.jsp">Register</a></li>
-                 </ul>
-            </nav>
-        </header>
-        <h1>Inicia sesion</h1>
+    <body class="is-preload">
+       <div id="wrapper">        
+            <%  
+                String mail="";
+                String pwd ="";
+                if(session.getAttribute("login")!=null && session.getAttribute("login").equals("No")){
+                    mail = (String) session.getAttribute("mail");
+                    pwd =  (String)  session.getAttribute("pwd");
+                    session.removeAttribute("login");
+                    List<String> errores = (List<String>)session.getAttribute("failedLogIn");
+                    if(!errores.isEmpty()){
+                        %><div id="respuestaDiv" style="background-color: red;"><%
+                            for(int i = 0; i < errores.size(); i++){
+                                %> <%=errores.get(i)%><%
+                                    %><br><%
+                            }
+                        %></div><%
+                    }
+                }
+                Enumeration<String> atributos = session.getAttributeNames();
+                while(atributos.hasMoreElements()){
+                    session.removeAttribute(atributos.nextElement());
+                }
+        %>
+        <header id="header" style="margin-bottom: 5%; padding-bottom: 2%;">
+            <a href="login.jsp" class="logo">MY <strong>ENERGY</strong>  HUB</a>
+	</header>
+            <div style="margin-left: 5%; margin-right: 5%; margin-top: 2%">
+            <h1 style="text-align: center">Iniciar sesion</h1>
             <form action="LoginServlet" method="POST" >
-                <p><label>Email</label><input type="email" name="mail" required></p>
-                <p><label>Contraseña</label><input type="password" name="pwd" required></p>
-                <button type="submit">Login</button>
+                <div class="row gtr-uniform">
+                    <div class="col-6 col-12-xsmall">
+                        <label>Email</label>
+                        <input type="text" name="mail" id="demo-name" maxlength="30" required
+                               <% if(!mail.equals("")){ %>
+                                value="<%=mail%>"
+                              <% }else{%> placeholder="Email"<%} %>
+                               />
+                    </div>
+                    <div class="col-6 col-12-xsmall">
+                        <label>Contraseña</label>
+                        <input type="password" name="pwd" id="demo-name"  maxlength="60" required
+                               <% if(!pwd.equals("")){ %>
+                                value="<%=pwd%>"
+                              <% }else{%> placeholder="Contraseña"<%} %>
+                               />
+                    </div>
+                </div>  
+                <button class="button primary" type="submit" style="width: 100%; margin-top: 5%">Entrar</button>                               
             </form>
+            <button style="width: 100%; margin-top: 1%" onclick="location.href='index.jsp'">No tengo cuenta</button>
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
     </body>
 </html>

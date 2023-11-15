@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -36,16 +38,70 @@ Controller controller = new Controller();
             out.println("</html>");
         }
     }
-
-@Override
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
-        List<User> clientes = new ArrayList<>();
-        clientes = controller.getUsers();
-        HttpSession session = request.getSession();
-        session.setAttribute("listaUsers", clientes);
-        response.sendRedirect("mostrarUsuarios.jsp");
+         HttpSession session = request.getSession();
+        List<User> lista = controller.getUsers();
+        if(lista==null){
+            lista= new ArrayList<>();
+        }
+        String name= request.getParameter("name");
+        String surname= request.getParameter("surname");
+        String telf= request.getParameter("telf");
+        String mail= request.getParameter("mail");
+        String pwd= request.getParameter("pwd");
+        String pwd2= request.getParameter("pwd2");
+        User us = new User(name,surname,telf,mail,pwd);
+        Boolean insertar = true;
+        List<String> errores = new ArrayList<>();
+        for(User user : lista){
+            if(!((User)session.getAttribute("user")).getEmail().equals(us.getEmail()) && user.getEmail().equals(us.getEmail())){
+                insertar = false;
+                errores.add( "Cliente ya existente con ese mail");
+                session.setAttribute("failedUpdate", errores);
+            }
+        }
+        if(!us.getPwd().equals(pwd2)){
+                errores.add( "La password debe coincidir");
+                session.setAttribute("failedUpdate", errores);
+                insertar = false;
+            }
+        if(name.length()>30){
+            errores.add( "La longitud maxima de nombre es 30");
+            session.setAttribute("failedUpdate", errores);
+        }if(surname.length()>60){
+            errores.add( "La longitud maxima de apellidos es 60");
+            session.setAttribute("failedUpdate", errores);
+        }if(telf.length()>9){
+            errores.add( "La longitud maxima de telefono es 9");
+            session.setAttribute("failedUpdate", errores);
+        }if(mail.length()>60){
+            errores.add( "La longitud maxima del mail es 60");
+            session.setAttribute("failedUpdate", errores);
+        }if(pwd.length()>30){
+            errores.add( "La longitud maxima de la password es 30");
+            session.setAttribute("failedUpdate", errores);
+        }
+        if(insertar==true){
+             try {
+                 us.setId(((User)session.getAttribute("user")).getId());
+                 controller.updateUser(us );
+             } catch (Exception ex) {
+                 Logger.getLogger(UserServlet.class.getName()).log(Level.SEVERE, null, ex);
+             }
+            session.removeAttribute("failedUpdate");
+            session.setAttribute("okUpdate", "ok");
+            lista.add(new User(name,surname,telf,mail,pwd));
+            session.removeAttribute("user");
+            session.setAttribute("user", us);
+            response.sendRedirect("perfil.jsp");
+        }if(insertar==false){
+            session.setAttribute("failedUserUpdate",us);
+            response.setContentType("text/plain");
+            response.sendRedirect("perfil.jsp");
+        }
     }
 
 
@@ -65,30 +121,44 @@ Controller controller = new Controller();
         String pwd2= request.getParameter("pwd2");
         User us = new User(name,surname,telf,mail,pwd);
         Boolean insertar = true;
-        String respuesta="";
-        
+        List<String> errores = new ArrayList<>();
         for(User user : lista){
             if(user.getEmail().equals(us.getEmail())){
                 insertar = false;
-                request.setAttribute("result", "Cliente ya existente con ese mail");
-                respuesta = "Cliente ya existente con ese mail";
+                errores.add( "Cliente ya existente con ese mail");
+                session.setAttribute("failedLogIn", errores);
             }
         }
         if(!us.getPwd().equals(pwd2)){
-                request.setAttribute("result", "La password debe coincidir");
+                errores.add( "La password debe coincidir");
+                session.setAttribute("failedLogIn", errores);
                 insertar = false;
-                respuesta = "La password debe coincidir";              
             }
-    
+        if(name.length()>30){
+            errores.add( "La longitud maxima de nombre es 30");
+            session.setAttribute("failedLogIn", errores);
+        }if(surname.length()>60){
+            errores.add( "La longitud maxima de apellidos es 60");
+            session.setAttribute("failedLogIn", errores);
+        }if(telf.length()>9){
+            errores.add( "La longitud maxima de telefono es 9");
+            session.setAttribute("failedLogIn", errores);
+        }if(mail.length()>60){
+            errores.add( "La longitud maxima del mail es 60");
+            session.setAttribute("failedLogIn", errores);
+        }if(pwd.length()>30){
+            errores.add( "La longitud maxima de la password es 30");
+            session.setAttribute("failedLogIn", errores);
+        }
         if(insertar==true){
             controller.createUser(us );
             controller.createHouse(new House(us.getId()));
             lista.add(new User(name,surname,telf,mail,pwd));
-            session.setAttribute("listaUsers", lista);
             response.sendRedirect("login.jsp");
         }if(insertar==false){
+            session.setAttribute("failedUser",us);
             response.setContentType("text/plain");
-            response.getWriter().write(respuesta);
+            response.sendRedirect("index.jsp");
         }
     }
 

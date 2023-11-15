@@ -68,15 +68,18 @@ public class LoginServlet extends HttpServlet {
                         session.setAttribute("userHouse", ho);
                     }
                 }
-                response.sendRedirect("mostrarUsuarios.jsp");
-
             }
         }
         if(login==false){
+            List<String> errores = new ArrayList<>();
+            errores.add( "Email/Contraseña incorrectos");
+            session.setAttribute("failedLogIn", errores);
             session.setAttribute("login", "No");
             session.setAttribute("mail",mail);
             session.setAttribute("pwd",pwd);
-            response.sendRedirect("index.jsp");
+            response.sendRedirect("login.jsp");
+        }else{
+            response.sendRedirect("home.jsp");
         }
     }
 

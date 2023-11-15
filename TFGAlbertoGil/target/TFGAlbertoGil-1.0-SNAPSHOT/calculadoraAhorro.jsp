@@ -6,52 +6,127 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
-    </head>
-    <body>
-        <header>
-            <nav>
-                <ul>
-                    <li><a href="#">Logout</a></li>
-                    <li><a href="mostrarUsuarios.jsp">Lista Usuarios</a></li>
-                    <li><a href="calculadoraAhorro.jsp">Mi casa</a></l>
-                    <li><a href="#">Mi cuenta</a></li>
-                    <li><a href="#">Contacto</a></li>
-                 </ul>
-            </nav>
-        </header>
-        <%
-            Controller controller = new Controller();
-            User user = (User) session.getAttribute("user");
-            List <House> houses = controller.getHouses();
-            House house = new House(user.getId());
-            for(House hou : houses){
-                if(hou.getId_user()==user.getId()){
-                    house = hou;
+   <head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<link rel="stylesheet" href="assets/css/main.css" />
+	<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+        <title>MyEnergyHub</title>
+        <script language="JavaScript">
+            window.onload = function () {
+                document.addEventListener("contextmenu", function (e) {
+                    e.preventDefault();
+                }, false);
+                document.addEventListener("keydown", function (e) {
+                    //document.onkeydown = function(e) {
+                    // "I" key
+                    if (e.ctrlKey && e.shiftKey && e.keyCode == 73) {
+                        disabledEvent(e);
+                    }
+                    // "J" key
+                    if (e.ctrlKey && e.shiftKey && e.keyCode == 74) {
+                        disabledEvent(e);
+                    }
+                    // "S" key + macOS
+                    if (e.keyCode == 83 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
+                        disabledEvent(e);
+                    }
+                    // "U" key
+                    if (e.ctrlKey && e.keyCode == 85) {
+                        disabledEvent(e);
+                    }
+                    // "F12" key
+                    if (event.keyCode == 123) {
+                        disabledEvent(e);
+                    }
+                }, false);
+                function disabledEvent(e) {
+                    if (e.stopPropagation) {
+                        e.stopPropagation();
+                    } else if (window.event) {
+                        window.event.cancelBubble = true;
+                    }
+                    e.preventDefault();
+                    return false;
                 }
             }
-            
-        %>
-        <h1>Calculadora</h1>
-            <form action="HouseServlet" method="POST" >
-                <p><label>Nombre</label>
-                    <input type="text" name="name" required value="<%=house.getNombre()%>"></p>
-                <p><label>Personas por vivienda </label>
-                    <input type="number" name="ppv" max="20"  pattern="([0-9]{1,2})" required value="<%=house.getHabitantes() %>"></p>
-                <p><label>Tamaño vivienda</label>
-                    <input type="number" name="size" pattern="([0-9]{1,5})" required value="<%=house.getTamaño() %>"></p>
-                <p><label>Consumo mes</label>
-                    <input type="number" name="cost" pattern="([0-9]{1,5}).([0-9]{1,2})" required value="<%=house.getConsumo() %>"></p>
-                <p><label>Numero paneles</label>
-                    <input type="number" name="panels" max="50"  pattern="([0-9]{1,2})" required value="<%=house.getNumeroPaneles() %>"></p>
-                <p><label>Precio por panel</label>
-                    <input type="number" name="pricepanel"  pattern="([0-9]{1,5}).([0-9]{1,2})" required value="<%=house.getPrecioPanel() %>"></p>
-                <button type="submit">Enviar</button>
-            </form>
-        <h2>Ahorro mensual: <%=house.getAhorro() %> </h2>
-        <h2>Meses en amortizar: <%=(house.getPrecioPanel()*house.getNumeroPaneles())/house.getAhorro() %> </h2>
+    </script>
+    </head>
+    <body class="is-preload">
+       <div id="wrapper"> 
+            <header id="header">
+                <a href="home.jsp" class="logo">MY <strong>ENERGY</strong>  HUB</a>
+                <nav>
+                        <a href="#menu">Menu</a>
+                </nav>
+            </header>
+            <nav id="menu">
+                <ul class="links">
+                    <li><a href="home.jsp">Inicio</a></li>
+                    <li><a href="calculadoraAhorro.jsp">Calculadora</a></li>
+                    <li><a href="perfil.jsp">Mi perfil</a></li>
+                    <li><a href="login.jsp" class="button primary fit">Cerrar sesión</a></li>
+                </ul>
+            </nav>
+            <%
+                if(session.getAttribute("login")==null || !session.getAttribute("login").equals("Logged")){
+                    response.sendRedirect("login.jsp");
+                }else{
+                Controller controller = new Controller();
+                User user = (User) session.getAttribute("user");
+                List <House> houses = controller.getHouses();
+                House house = new House(user.getId());
+                for(House hou : houses){
+                    if(hou.getId_user()==user.getId()){
+                        house = hou;
+                    }
+                }
 
+            %>
+                <div style="margin-left: 5%; margin-right: 5%;">
+                <h1 style="text-align: center">Calculadora</h1>
+                <form action="HouseServler" method="POST" >
+                    <div class="row gtr-uniform">
+                        <div class="col-6 col-12-xsmall">
+                            <label>Nombre de la casa</label>
+                        <input type="text" name="name" required value="<%=house.getNombre()%>">
+                        </div>
+                        <div class="col-6 col-12-xsmall">
+                            <label>Personas por vivienda </label>
+                        <input type="text" name="ppv" max="20"  pattern="([0-9]{1,2})" required value="<%=house.getHabitantes() %>"></p>
+                        </div>
+                        <div class="col-6 col-12-xsmall">
+                            <label>Tamaño vivienda </label>
+                        <input type="text" name="size" pattern="([0-9]{1,5})" required value="<%=house.getTamaño() %>"></p>
+                        </div>                    
+                        <div class="col-6 col-12-xsmall">
+                            <label>Consumo mes </label>
+                        <input type="text" name="cost" pattern="([0-9]{1,5}).([0-9]{1,2})" required value="<%=house.getConsumo() %>"></p>
+                        </div>
+                        <div class="col-6 col-12-xsmall">
+                            <label>Numero paneles</label>
+                        <input type="text" name="panels" max="50"  pattern="([0-9]{1,2})" required value="<%=house.getNumeroPaneles() %>"></p>
+                        </div>
+                        <div class="col-6 col-12-xsmall">
+                            <label>Precio por panel</label>
+                        <input type="text" name="pricepanel"  pattern="([0-9]{1,5}).([0-9]{1,2})" required value="<%=house.getPrecioPanel() %>"></p>
+                        </div>
+                    </div>  
+                    <button class="button primary" type="submit" style="width: 100%; margin-top: 5%">Calcular</button>                               
+                </form>
+
+            <h2>Ahorro mensual: <%=house.getAhorro() %> </h2>
+            <h2>Meses en amortizar: <%=(house.getPrecioPanel()*house.getNumeroPaneles())/house.getAhorro() %> </h2>
+            </div>
+            <%}%>
+       </div>
+            		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
     </body>
 </html>
