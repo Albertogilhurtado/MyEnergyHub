@@ -133,17 +133,18 @@
                         </div>
                         <div class="col-6 col-12-xsmall">
                             <label>Nueva contraseña</label>
-                            <input type="password" name="pwd" id="demo-name"  placeholder="Contraseña" maxlength="30"  required/>
+                            <input type="password" name="pwd" id="demo-name"  placeholder="Contraseña" maxlength="30" minlength="8"  required/>
                         </div>
                         <div class="col-6 col-12-xsmall">
                             <label>Repetir nueva contraseña</label>
-                            <input type="password" name="pwd2" id="demo-name"  placeholder="Repetir ontraseña" maxlength="30" required/>
+                            <input type="password" name="pwd2" id="demo-name"  placeholder="Repetir ontraseña" maxlength="30" minlength="8" required/>
                         </div>
                     </div>
                     <button class="button primary" type="submit" style="width: 100%; margin-top: 5%">Actualizar</button>
 
                 </form>
                                   <% }%>
+            <button style="width: 100%; margin-top: 1%" onclick="location.href='borrarCuenta.jsp'">Borrar mi cuenta</button>
             </div>
        </div>
 		<!-- Scripts -->

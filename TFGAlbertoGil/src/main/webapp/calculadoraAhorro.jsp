@@ -85,10 +85,10 @@
             %>
                 <div style="margin-left: 5%; margin-right: 5%;">
                 <h1 style="text-align: center">Calculadora</h1>
-                <form action="HouseServler" method="POST" >
+                <form action="HouseServlet" method="POST" >
                     <div class="row gtr-uniform">
                         <div class="col-6 col-12-xsmall">
-                            <label>Nombre de la casa</label>
+                            <label>Comentario</label>
                         <input type="text" name="name" required value="<%=house.getNombre()%>">
                         </div>
                         <div class="col-6 col-12-xsmall">
@@ -100,7 +100,7 @@
                         <input type="text" name="size" pattern="([0-9]{1,5})" required value="<%=house.getTamaño() %>"></p>
                         </div>                    
                         <div class="col-6 col-12-xsmall">
-                            <label>Consumo mes </label>
+                            <label>Consumo mes en euros</label>
                         <input type="text" name="cost" pattern="([0-9]{1,5}).([0-9]{1,2})" required value="<%=house.getConsumo() %>"></p>
                         </div>
                         <div class="col-6 col-12-xsmall">
@@ -108,7 +108,7 @@
                         <input type="text" name="panels" max="50"  pattern="([0-9]{1,2})" required value="<%=house.getNumeroPaneles() %>"></p>
                         </div>
                         <div class="col-6 col-12-xsmall">
-                            <label>Precio por panel</label>
+                            <label>Precio por panel en euros</label>
                         <input type="text" name="pricepanel"  pattern="([0-9]{1,5}).([0-9]{1,2})" required value="<%=house.getPrecioPanel() %>"></p>
                         </div>
                     </div>  
@@ -116,7 +116,17 @@
                 </form>
 
             <h2>Ahorro mensual: <%=house.getAhorro() %> </h2>
-            <h2>Meses en amortizar: <%=(house.getPrecioPanel()*house.getNumeroPaneles())/house.getAhorro() %> </h2>
+            <h2>Meses en amortizar: 
+                <% if(house.getNumeroPaneles()!=0 || house.getAhorro()!=0){
+                       %>
+                       <%=(house.getPrecioPanel()*house.getNumeroPaneles())/house.getAhorro()%>
+                       <% 
+                    }else{
+                       %>
+                       <%=0%>
+                       <%  
+                    }
+                %> </h2>
             </div>
             <%}%>
        </div>

@@ -82,7 +82,7 @@
 										<img src="images/pic03.jpg" alt="" />
 									</span>
 									<header class="major">
-										<h3>Datos de referencia inciales</h3>
+										<h3>Datos de referencia iniciales</h3>
 										<p>Los datos de ahorro se han obtenido con una tarifa recomendada para todos con 
                                                                                 sistema de bateria virtual y con los paneles en orientacion sur o este/oeste, en caso de
                                                                                 que tu ahorro no se vea ajustado al que mostramos en los calculos puede ser debido a que
@@ -120,14 +120,8 @@
 					<footer id="footer">
 						<div class="inner">
 							<ul class="icons">
-								<li><a href="#" class="icon brands alt fa-twitter"><span class="label">Twitter</span></a></li>
-								<li><a href="#" class="icon brands alt fa-facebook-f"><span class="label">Facebook</span></a></li>
-								<li><a href="#" class="icon brands alt fa-instagram"><span class="label">Instagram</span></a></li>
-								<li><a href="#" class="icon brands alt fa-github"><span class="label">GitHub</span></a></li>
-								<li><a href="#" class="icon brands alt fa-linkedin-in"><span class="label">LinkedIn</span></a></li>
-							</ul>
-							<ul class="copyright">
-								<li>&copy; Untitled</li><li>Design: <a href="https://html5up.net">HTML5 UP</a></li>
+								<li><a href="https://github.com/Albertogilhurtado/MyEnergyHub" class="icon brands alt fa-github" target="_blank" rel="noopener noreferrer"><span class="label">GitHub</span></a></li>
+								<li><a href="https://www.linkedin.com/in/alberto-gil-hurtado-b9b241238/" class="icon brands alt fa-linkedin-in" target="_blank" rel="noopener noreferrer"><span class="label">LinkedIn</span></a></li>
 							</ul>
 						</div>
 					</footer>

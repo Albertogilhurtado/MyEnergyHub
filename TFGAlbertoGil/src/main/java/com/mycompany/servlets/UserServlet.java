@@ -1,6 +1,7 @@
 
 package com.mycompany.servlets;
 
+import controllers.EncriptadorController;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ import modelo.User;
 @WebServlet(name = "UserServlet", urlPatterns = {"/UserServlet"})
 public class UserServlet extends HttpServlet {
 Controller controller = new Controller();
+EncriptadorController encriptador = new EncriptadorController();
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -87,13 +89,14 @@ Controller controller = new Controller();
         if(insertar==true){
              try {
                  us.setId(((User)session.getAttribute("user")).getId());
+                 us.setPwd(encriptador.encrypt(us.getPwd(),"secrete"));
                  controller.updateUser(us );
              } catch (Exception ex) {
                  Logger.getLogger(UserServlet.class.getName()).log(Level.SEVERE, null, ex);
              }
             session.removeAttribute("failedUpdate");
             session.setAttribute("okUpdate", "ok");
-            lista.add(new User(name,surname,telf,mail,pwd));
+            lista.add(new User(name,surname,telf,mail,encriptador.encrypt(pwd, "secrete")));
             session.removeAttribute("user");
             session.setAttribute("user", us);
             response.sendRedirect("perfil.jsp");
@@ -151,6 +154,7 @@ Controller controller = new Controller();
             session.setAttribute("failedLogIn", errores);
         }
         if(insertar==true){
+            us.setPwd(encriptador.encrypt(us.getPwd(),"secrete"));
             controller.createUser(us );
             controller.createHouse(new House(us.getId()));
             lista.add(new User(name,surname,telf,mail,pwd));

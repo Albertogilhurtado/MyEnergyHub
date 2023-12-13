@@ -12,3 +12,4 @@ modelo\House.class
 controllers\exceptions\NonexistentEntityException.class
 controllers\exceptions\PreexistingEntityException.class
 controllers\ControllerPersistencia.class
+controllers\EncriptadorController.class

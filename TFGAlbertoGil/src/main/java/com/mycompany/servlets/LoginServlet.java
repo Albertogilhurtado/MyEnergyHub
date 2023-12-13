@@ -1,10 +1,14 @@
 
 package com.mycompany.servlets;
 
+import controllers.EncriptadorController;
+import controllers.exceptions.NonexistentEntityException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -19,6 +23,7 @@ import modelo.User;
 public class LoginServlet extends HttpServlet {
 
     Controller controller = new Controller();
+    EncriptadorController encriptador = new EncriptadorController();
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -41,7 +46,17 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        HttpSession session = request.getSession();
+        User user =(User) session.getAttribute("user");
+        House casa = (House)session.getAttribute("userHouse");
+        try {
+            controller.deleteUser(user.getId());
+            controller.deleteHouse(casa.getId());
+            response.sendRedirect("login.jsp");
+        } catch (NonexistentEntityException ex) {
+            response.sendRedirect("perfil.jsp");
+            Logger.getLogger(LoginServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override
@@ -58,10 +73,11 @@ public class LoginServlet extends HttpServlet {
         Boolean login = false;
         
         for(User user : lista){
-            if(user.getEmail().equals(mail) && pwd.equals(user.getPwd())){
+            if(user.getEmail().equals(mail) && pwd.equals(encriptador.decrypt(user.getPwd(), "secrete"))){
                 List<House> casas = controller.getHouses();
                 login = true;
                 session.setAttribute("login", "Logged");
+                user.setPwd(encriptador.encrypt(user.getPwd(),"secrete"));
                 session.setAttribute("user", user);
                 for(House ho : casas){
                     if(ho.getId_user()==user.getId()){
